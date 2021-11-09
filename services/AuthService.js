@@ -5,7 +5,7 @@ const {NotFound, NotAcceptable, Forbidden} = require("../helpers/CustomErrors");
 
 const AuthService = {
     register(email, password) {
-        const user = UserService.findOneByEmail(email)
+        let user = UserService.findOneByEmail(email)
 
         if (user) {
             throw new NotAcceptable("This email address is already being used")
@@ -13,7 +13,15 @@ const AuthService = {
 
         const {hash, salt} = Password.genPassword(password)
 
-        return UserService.create(email, hash, salt);
+        user = UserService.create(email, hash, salt);
+
+        const {token, expiresIn} = JWT.issueJWT(user.id);
+
+        return {
+            user,
+            token,
+            expiresIn
+        };
     },
     login(email, password) {
         const user = UserService.findOneByEmail(email)
@@ -28,7 +36,12 @@ const AuthService = {
             throw new Forbidden("The entered password is not correct")
         }
 
-        return JWT.issueJWT(user.id);
+        const {token, expiresIn} = JWT.issueJWT(user.id)
+
+        return {
+            token,
+            expiresIn
+        };
     },
 }
 

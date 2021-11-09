@@ -16,8 +16,7 @@ const UserRepository = {
         }
         return {
             id: users[email].id,
-            email: users[email].email,
-            password: users[email].hash,
+            email: users[email].email
         }
     }
 
