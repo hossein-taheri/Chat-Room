@@ -1,30 +1,33 @@
 const SocketResponse = require("../../helpers/responses/SocketResponse");
 const MessageService = require("../../services/MessageService");
-const MAXIMUM_GROUP_USERS_NUMBER = parseInt(process.env.MAXIMUM_GROUP_USERS_NUMBER) || 50
+const ChatService = require("../../services/ChatService");
 
 const room = 'public-room';
 
 const ChatController = (io, socket) => {
     const connectToRoom = () => {
         try {
-            if ((io.sockets.adapter.rooms[room]) && (io.sockets.adapter.rooms[room].length >= MAXIMUM_GROUP_USERS_NUMBER))
-                throw new Error("Group has been reached to it's maximum users number,try later")
-            else {
-                socket.join(room)
 
-                //Send user-connected to everyone in the room
-                SocketResponse.SystemInformation(io, room, 'user-connected', {
-                    email: socket.user.email
-                })
+            ChatService.checkAllowedToConnect(io, socket, room);
 
-                //Send all messages to connected user
-                SocketResponse.SendAllMessages(io, socket.id, {
-                    messages: MessageService.findAll()
-                })
 
-            }
+            socket.join(room)
+
+
+            //Send user-connected to everyone in the room
+            SocketResponse.SystemInformation(io, room, 'user-connected', {
+                email: socket.user.email
+            })
+
+
+            //Send all messages to connected user
+            SocketResponse.SendAllMessages(io, socket.id, {
+                messages: MessageService.findAll()
+            })
+
+
         } catch (err) {
-            return SocketResponse.SocketError(io, socket.id, err);
+            SocketResponse.SocketError(io, socket.id, err);
             socket.disconnect();
         }
     };
@@ -77,7 +80,6 @@ const ChatController = (io, socket) => {
 
 
     connectToRoom()
-    socket.on('disconnect', disconnect);
     socket.on('disconnect', disconnect);
     socket.on('send-message', sendMessage);
     socket.on('start-typing', startTyping);

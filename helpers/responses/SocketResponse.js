@@ -10,7 +10,7 @@ const NewMessage = (io, room, message) => {
 
 const SendAllMessages = (io, socketId, messages) => {
     console.log(messages);
-    io.to(socketId).emit('all-messages', {messages});
+    io.to(socketId).emit('all-messages', messages);
 }
 
 const SystemInformation = (io, room, type, message) => {
