@@ -5,7 +5,7 @@ const SocketError = (io, socketId, err) => {
 
 const NewMessage = (io, room, message) => {
     console.log(message);
-    io.to(room).emit('new-message', {message});
+    io.to(room).emit('new-message', message);
 }
 
 const SendAllMessages = (io, socketId, messages) => {
