@@ -1,7 +1,6 @@
 const ApiResponse = {
     response: (req, res, status_code, messages, data) => {
-        res.status = status_code;
-        return res.json({
+        return res.status(status_code).json({
             status: status_code,
             messages: messages,
             data: data,

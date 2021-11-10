@@ -1,3 +1,7 @@
+const JWT = require("../../helpers/JWT");
+const SocketResponse = require('../../helpers/responses/SocketResponse');
+const UserService = require("../../services/UserService");
+const {NotFound} = require("../../helpers/CustomErrors");
 
 module.exports = async (socket, next) => {
     try {
@@ -12,12 +16,20 @@ module.exports = async (socket, next) => {
 
         */
 
-        //TODO :: complete this
+        //TODO :: change this
+        const {id} = await JWT.verifyJWT(socket.handshake.headers.auth)
+        socket.user = UserService.findOneById(id)
+
+
+        if (!socket.user) {
+            throw new NotFound("User not found");
+        }
 
         next()
 
 
     } catch (err) {
-
+        SocketResponse.SocketError(socket, socket.id, err)
+        socket.disconnect()
     }
 }

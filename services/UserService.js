@@ -1,5 +1,8 @@
 const UserRepository = require("../repositories/UserRepository");
 const UserService = {
+    findOneById(id){
+        return UserRepository.findOneById(id);
+    },
     findOneByEmail(email) {
         return UserRepository.findOneByEmail(email);
     },

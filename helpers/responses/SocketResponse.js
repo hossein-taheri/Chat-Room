@@ -1,5 +1,5 @@
 const SocketError = (io, socketId, err) => {
-    console.log(err.message);
+    console.log('error', {error: err.message});
     io.to(socketId).emit('error', {error: err.message});
 }
 
@@ -8,9 +8,9 @@ const NewMessage = (io, room, message) => {
     io.to(room).emit('new-message', {message});
 }
 
-const SendAllMessages = (io, room, messages) => {
+const SendAllMessages = (io, socketId, messages) => {
     console.log(messages);
-    io.to(room).emit('all-messages', {messages});
+    io.to(socketId).emit('all-messages', {messages});
 }
 
 const SystemInformation = (io, room, type, message) => {

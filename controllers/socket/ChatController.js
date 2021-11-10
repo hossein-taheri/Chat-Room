@@ -1,12 +1,14 @@
 const SocketResponse = require("../../helpers/responses/SocketResponse");
 
 
+const room = 'public-room';
+
 const ChatController = (io, socket) => {
     const connectToRoom = async ({}) => {
         try {
 
             //Send connect-to-room to everyone in the room
-            SocketResponse.SystemInformation(io, chatId, 'connected-to-room', {username: socket.user.username})
+            SocketResponse.SystemInformation(io, room, 'user-connected', {email: socket.user.email})
         } catch (err) {
             return SocketResponse.SocketError(io, socket.id, err);
         }
@@ -16,7 +18,7 @@ const ChatController = (io, socket) => {
         try {
 
             //Send disconnect-from-room to everyone in the room
-            SocketResponse.SystemInformation(io, chatId, 'disconnected-from-room', {username: socket.user.username})
+            SocketResponse.SystemInformation()
         } catch (err) {
             return SocketResponse.SocketError(io, socket.id, err);
         }
@@ -26,7 +28,7 @@ const ChatController = (io, socket) => {
         try {
 
 
-            SocketResponse.SendAllMessages(io, socket.id, message)
+            SocketResponse.SendAllMessages()
         } catch (err) {
             return SocketResponse.SocketError(io, socket.id, err);
         }
@@ -64,12 +66,12 @@ const ChatController = (io, socket) => {
     }
 
 
-    socket.on('connect-to-room', connectToRoom);
     socket.on('disconnect', disconnect);
     socket.on('get-messages', getMessages);
     socket.on('send-message', sendMessage);
     socket.on('start-typing', startTyping);
     socket.on('stop-typing', stopTyping);
+    connectToRoom({})
 };
 
 module.exports = ChatController;
