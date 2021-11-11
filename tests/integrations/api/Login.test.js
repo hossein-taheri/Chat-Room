@@ -1,18 +1,7 @@
-const express = require("express");
-const auth = require("../../../routers/auth");
-const request = require("supertest");
-const app = express();
-
-require('../../../bootstrap/dotenv')
+const {request,app} = require('../bootstrap')
 const UserRepository = require("../../../repositories/UserRepository");
 const Password = require("../../../helpers/Password");
 const JWT = require("../../../helpers/JWT");
-
-app.use(express.urlencoded({extended: false}));
-app.use(express.json());
-app.use("/auth", auth);
-
-require('../../../bootstrap/error_handler')(app);
 
 
 describe("testing-server-routes", () => {
