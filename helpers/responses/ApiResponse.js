@@ -7,7 +7,6 @@ const ApiResponse = {
         });
     },
     error: (req, res, err_code, ...err_messages) => {
-        console.log(err_messages)
         return ApiResponse
             .response(
                 req,
