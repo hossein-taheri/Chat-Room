@@ -16,8 +16,7 @@ module.exports = async (socket, next) => {
 
         */
 
-        //TODO :: change this
-        const {id} = await JWT.verifyJWT(socket.handshake.headers.auth)
+        const {id} = await JWT.verifyJWT(socket.handshake.auth.token)
         socket.user = UserService.findOneById(id)
 
 
